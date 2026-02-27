@@ -1,0 +1,100 @@
+transient_prompt:
+  template: "❯ "
+  foreground: "p:soft_green"
+  background: "transparent"
+
+version: 4
+final_space: true
+
+palette:
+  os: "#ACB0BE"
+  closer: "p:os"
+  pink: "#F5C2E7"
+  lavender: "#B4BEFE"
+  blue: "#89B4FA"
+  soft_red: "#E06C75"
+  soft_yellow: "#F9E2AF"
+  soft_green: "#A6E3A1"
+  soft_cyan: "#94E2D5"
+
+console_title_template: "{{.Folder}}{{if .Root}} :: root{{end}} :: {{.Shell}}"
+
+blocks:
+  - type: prompt
+    alignment: left
+    segments:
+      - type: os
+        style: plain
+        foreground: "p:os"
+        template: "{{.Icon}} "
+      
+      - type: session
+        style: plain
+        # foreground: "#ff8800"
+        foreground: "p:blue"
+        template: "{{ .UserName }}: "
+      
+      - type: path
+        style: plain
+        foreground: "p:pink"
+        template: "{{ .Path }} "
+        properties:
+          folder_icon: "..\ue5fe.."
+          home_icon: "~"
+          style: agnoster_short
+      
+      - type: git
+        style: plain
+        foreground: "p:lavender"
+        foreground_templates:
+          - "{{ if or (.Working.Changed) (.Staging.Changed) }}#FF9248{{ end }}"
+        # template: "<#ffffff>on</> <p:soft_green>{{ .UpstreamIcon }} </> \uF418 {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }} "
+        template: "<#ffffff>on</> <p:soft_green>\uf1d3</> \uF418 {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }} "
+        properties:
+          fetch_status: true
+          branch_icon: ""
+          fetch_upstream_icon: true
+
+  - type: prompt
+    alignment: right
+    segments:
+      - type: executiontime
+        # style: diamond
+        style: plain
+        foreground: "p:soft_red"
+        template: "{{ .FormattedMs }}"
+        properties:
+          style: roundrock
+          threshold: 0
+        
+      - type: text
+        style: plain
+        foreground: "#89ddff"
+        template: " \u2726 " # The blue diamond/star
+
+      - type: sysinfo
+        # style: diamond
+        style: plain
+        foreground: "p:soft_cyan"
+        # leading_diamond: ""
+        # trailing_diamond: " \u250b " # The blue vertical bar
+        template: "RAM: {{ (div ((sub .PhysicalTotalMemory .PhysicalAvailableMemory)|float64) 1073741824.0) }}/{{ (div .PhysicalTotalMemory 1073741824.0) }}GB "
+      
+      - type: time
+        style: plain
+        # foreground: "#ffcb6b"
+        foreground: "p:soft_yellow"
+        template: "at {{ .CurrentDate | date .Format }} "
+        properties:
+          time_format: "3:04 PM"
+
+      
+  - type: prompt
+    alignment: left
+    newline: true # Forces arrow to next line with no blank gap
+    segments:
+      - type: text
+        style: plain
+        foreground: "p:soft_yellow"
+        template: "❯"
+  
